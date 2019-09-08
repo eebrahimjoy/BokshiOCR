@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3f3e85</color>
+    <color name="colorPrimaryDark">#070642</color>
+    <color name="colorAccent">#3f3e85</color>
+    <color name="red">#880505</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="gray_light">#2b2a2a</color>
+    <color name="gray">#7e7d7d</color>
+    <color name="gray__heavy_light">#d6d5d5</color>
+    <color name="offWhite">#DBDBDB</color>
+    <color name="light_gray">#9B9B9B</color>
+    <color name="green">#51C655</color>
+    <color name="ash">#7c7c7c</color>
+    <color name="map_color">#DDE3E3</color>
+    <color name="icon_color">#5F7D8C</color>
+    <color name="disable_color">#706F6F</color>
+    <color name="background">#dddddd</color>
+    <color name="text_color_default">#000000</color>
+    <color name="transparent_black">#80000000</color>
+    <color name="blue">#3f3e85</color>
+
+    <color name="dot_dark_screen1">#e9eef4</color>
+    <!-- dots active colors -->
+    <color name="dot_light_screen1">#000000</color>
+    <color name="image_border_color">#80000000</color>
+    <color name="transperent_color_ongoing">#40000000</color>
+    <color name="transperent_color_comission">#59000000</color>
+    <color name="transperent_color_comission_two">#59000000</color>
+    <color name="transperent_color_request">#40000000</color>
+    <color name="transperent_color_accepted">#26000000</color>
+    <color name="bg_color">#121212</color>
+</resources>
