@@ -1,12 +1,17 @@
 package com.tappware.bokshiocr.view.activity;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.ConnectivityManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.Html;
 import android.util.Base64;
 import android.view.View;
 
@@ -21,15 +26,20 @@ import com.tappware.bokshiocr.R;
 import com.tappware.bokshiocr.databinding.ActivityImageRecognitionBinding;
 import com.tappware.bokshiocr.utility.ConnectivityHelper;
 import com.tappware.bokshiocr.utility.CustomVisibility;
+import com.tappware.bokshiocr.utility.StaticKeys;
 import com.tappware.bokshiocr.view.fragment.ImageZoomingDialog;
 import com.tappware.bokshiocr.view.receiver.NetworkChangeReceiver;
 import com.tappware.bokshiocr.viewmodel.ImageRecognitionViewModel;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 public class ImageRecognitionActivity extends AppCompatActivity implements OnNetworkStateChangeListener {
     private ActivityImageRecognitionBinding binding;
     private String image64 = null;
     private ImageRecognitionViewModel imageRecognitionViewModel;
     private NetworkChangeReceiver mNetworkReceiver;
+    private String filePath = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +47,12 @@ public class ImageRecognitionActivity extends AppCompatActivity implements OnNet
         binding = DataBindingUtil.setContentView(this, R.layout.activity_image_recognition);
         binding.progressBar.setVisibility(View.VISIBLE);
         init();
+        //setImageToView();
 
         binding.originalImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                openImageZoomingDialog(image64);
+                //openImageZoomingDialog(image64);
             }
         });
 
@@ -54,18 +65,37 @@ public class ImageRecognitionActivity extends AppCompatActivity implements OnNet
 
         if (getIntent().getExtras() != null) {
             image64 = getIntent().getStringExtra("image64");
+            filePath = getIntent().getStringExtra("filePath");
+             /* byte[] decodedString = Base64.decode(StaticKeys.file, Base64.DEFAULT);
+        Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+        binding.originalImageView.setImageBitmap(decodedByte);
+        getData(currentPhotoPath);*/
 
-            byte[] decodedString = Base64.decode(image64, Base64.DEFAULT);
-            Bitmap decodedByte = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
-            binding.originalImageView.setImageBitmap(decodedByte);
-            getData();
+            getDataViaRetrofit(filePath);
+            //getDataViaOKHTTP(filePath);
         }
 
 
     }
 
-    private void getData() {
-        imageRecognitionViewModel.getDataFromApi(image64).observe(this, new Observer<String>() {
+    private void getDataViaRetrofit(String filePath) {
+        imageRecognitionViewModel.getDataViaRetrofit(filePath, ImageRecognitionActivity.this).observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String string) {
+                if (string != null) {
+                    binding.progressBar.setVisibility(View.GONE);
+                    binding.resultTV.setText(Html.fromHtml(string));
+
+                }
+
+
+            }
+        });
+    }
+
+
+    private void getDataViaOKHTTP(String filePath) {
+        imageRecognitionViewModel.getDataViaOKHTTP(filePath).observe(this, new Observer<String>() {
             @Override
             public void onChanged(String string) {
                 if (string != null) {
@@ -136,6 +166,7 @@ public class ImageRecognitionActivity extends AppCompatActivity implements OnNet
             CustomVisibility.expand(binding.noInternetTV, 500);
         }
     }
+
     private void openImageZoomingDialog(String imageUrl) {
         Bundle bundle = new Bundle();
         bundle.putString("imageUrl", imageUrl);

@@ -1,6 +1,7 @@
 package com.tappware.bokshiocr.viewmodel;
 
 import android.app.Application;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
@@ -17,7 +18,10 @@ public class ImageRecognitionViewModel extends AndroidViewModel {
         imageRecognitionRepo = new ImageRecognitionRepo(application);
     }
 
-    public MutableLiveData<String> getDataFromApi(String encodedImage) {
-        return imageRecognitionRepo.getDataFromApi(encodedImage);
+    public MutableLiveData<String> getDataViaRetrofit(String filePath, Context context) {
+        return imageRecognitionRepo.getDataViaRetrofit(filePath,context);
+    }
+    public MutableLiveData<String> getDataViaOKHTTP(String filePath) {
+        return imageRecognitionRepo.getDataViaOKHTTP(filePath);
     }
 }
